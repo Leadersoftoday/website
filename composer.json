@@ -9,10 +9,14 @@
     },
 
     "require-dev": {
+        "phpspec/phpspec": "~2.0"
     },
 
     "autoload": {
         "psr-4": {
+            "LoT\\": "src/"
+        },
+        "psr-0": {
             "LoT\\": "src/"
         }
     }

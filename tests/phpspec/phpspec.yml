@@ -1,0 +1,6 @@
+suites:
+    Main:
+        namespace:   LoT
+        spec_prefix: Spec
+        src_path:    src/
+        spec_path:   tests/phpspec/

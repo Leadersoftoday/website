@@ -1,0 +1,5 @@
+routes:
+  homepage:
+    route: "/"
+    controller: "controller.index"
+    action: "indexAction"

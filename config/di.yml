@@ -1,4 +1,13 @@
 services:
+  twig:
+    class: "\\Twig_Environment"
+    arguments:
+        loader: "@twig.loader"
+  view.factory:
+    class: "\\LoT\\Application\\View\\Factory"
+    arguments:
+        twig: "@twig"
   controller.index:
     class: "\\LoT\\Controller\\IndexController"
-    arguments: []
+    arguments:
+        viewFactory: "@view.factory"

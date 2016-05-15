@@ -7,6 +7,7 @@ use LoT\Application\Config\Loader\Yaml;
 use LoT\Application\Config\Config;
 use LoT\Application\DependencyInjection\Builder as ContainerBuilder;
 use LoT\Application\Routing\ControllerProvider;
+use Twig_Loader_Filesystem as TwigLoader;
 
 class Application
 {
@@ -19,10 +20,11 @@ class Application
     /** @var Config */
     private $config;
     
-    /**
-     * @var ContainerBuilder 
-     */
+    /** @var ContainerBuilder */
     private $containerBuilder;
+    
+    /** @var string */
+    private $templatePath;
     
     /**
      * @param SilexApplication $silexApplication
@@ -52,6 +54,26 @@ class Application
         $request = $request ?: Request::createFromGlobals();
         $container->offsetSet('http.request', $request);
         
+        if ($this->templatePath) {
+            $container->offsetSet('twig.loader', new TwigLoader($this->templatePath));
+            
+            $this->silexApplication->error(function (\Exception $e, $code) use ($container) {
+                $viewFactory = $container->offsetget('view.factory');
+                switch ($code) {
+                    case 404:
+                        $view = $viewFactory->build('error/not-found.twig', array());
+                        break;
+                    default:
+                        $view = $viewFactory->build('error/error.twig', array(
+                            'exception' => $e,
+                            'code' => $code
+                        ));
+                }
+
+                return new \Symfony\Component\HttpFoundation\Response($view);
+            });
+        }
+        
         $controllerProvider = new ControllerProvider($container, (array)$this->config->get('routes'));
         $controllerProvider->register($this->silexApplication);
 
@@ -71,6 +93,19 @@ class Application
         foreach (glob("$path/*.yml") as $file) {
             $this->config->merge((array)$this->yaml->loadFromFile($file));
         }
+    }
+    
+    /**
+     * @param string $path
+     * @throws \Exception
+     */
+    public function setTemplatePath($path)
+    {
+        if (! is_dir($path)) {
+            throw new \Exception('Template directory does not exist.');
+        }
+        
+        $this->templatePath = $path;
     }
 
     /**

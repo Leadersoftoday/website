@@ -1,0 +1,15 @@
+{% extends "layout.twig" %}
+
+{% block title %}Page Not Found{% endblock %}
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+        .important { color: #336699; }
+    </style>
+{% endblock %}
+{% block content %}
+    <h1>Page Not Found</h1>
+    <p class="important">
+        We couldn't find that page. Please return to the <a href="/">home page</a>.
+    </p>
+{% endblock %}

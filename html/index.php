@@ -5,4 +5,5 @@ require "../vendor/autoload.php";
 
 $application = new \LoT\Application\Application;
 $application->ingestConfigFromDirectory(realpath(__DIR__ . '/../config'));
+$application->setTemplatePath(realpath(__DIR__ . '/../templates'));
 $application->run();

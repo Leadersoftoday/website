@@ -91,10 +91,3 @@ class ControllerProvider implements ServiceProviderInterface
         //nothing to do here, just satisfying the interface
     }
 }
-
-/*
- * index:
- *   - route: "/"
- *   - method: "GET"
- *   - controller: controller.index
- */
